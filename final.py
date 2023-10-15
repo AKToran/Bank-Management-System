@@ -46,9 +46,9 @@ class User:
         print(f"\n{self.name}s balance is {self.balance}/=Tk")
 
     def transaction_history(self):
-        print(f"{self.name}s Transaction History:")
+        print(f"\n{self.name}s Transaction History:")
         for key, value in self.history.items():
-            print(f'{key} - {value}')
+            print(f'{key} : {value}')
     
     def take_loan(self, amount):
         if Bank.loan_available is False:
@@ -56,9 +56,9 @@ class User:
         elif self.loan_count < 2 :
             self.balance += amount
             Bank.loan_given += amount
-            self.history["Loan taken"] = amount
+            self.history["Loan Taken"] = amount
             self.loan_count += 1
-            print(f"{amount}/=Tk loan added to the Account of {self.name}")
+            print(f"{amount}/=Tk loan added to the Account of {self.name}.")
         else:
             print("\nLoan limit Exited!")
         
@@ -89,7 +89,7 @@ class Admin(User):
             if account.name == acc_name:
                 flag = False
                 Bank.accounts_list.remove(account)
-                print(f"\nDeleted Account named: {acc_name}")
+                print(f"\nDeleted Account named: {acc_name}!")
         if flag:
             print(f"\nNo account found.")
 
@@ -98,7 +98,7 @@ class Admin(User):
         print("\n\t----------All acounts List-----------\n")
         print("Name ", " Email    ", "   Address ", "Account Type")
         for account in Bank.accounts_list:
-            print(f"{account.name}   {account.email}    {account.address}      {account.account_type}")
+            print(f"{account.name}   {account.email}    {account.address}       {account.account_type}")
 
     @staticmethod
     def bank_balance():
@@ -120,7 +120,7 @@ class Admin(User):
     @staticmethod
     def announce_bankrupt():
         Bank.is_bankrupt = True
-        print("\nThe bank is bankrupt!!!")
+        print("\n\t!!! The bank is bankrupt !!!")
 
 admin = Admin
 user = User
@@ -139,31 +139,37 @@ while True:
                 acc_type = input("Account type(savings/current): ")
                 user = User(name, email, address, acc_type)
                 logged_in = user
-            else:
+            elif op == "L":
                 user_name = input("What is your account name?: ")
                 flag = True
                 for account in Bank.accounts_list:
                     if account.name == user_name:
                         flag = False
                         user = account
-                        print("\nUser Log in successful")
+                        print("\nUser Log in successful.")
                 
                 if flag:
-                    print(f"No account named: {user_name}")
+                    print(f"\nNo account named: {user_name}!")
                     continue
                 else:
                     logged_in = user
-
-        else:
-            password = input("Enter Password(123): ")
-            if password == Admin.password:
-                print("\nAdmin Log in successful")
-                logged_in = admin
             else:
                 continue
 
+        elif person == "admin":
+            password = input("Enter Password(123): ")
+            if password == Admin.password:
+                print("\nAdmin Log in successful.")
+                logged_in = admin
+            else:
+                print("\nIncorrect Password!!")
+                continue
+        
+        else:
+            continue
+
     elif logged_in == user:
-        print("\n\t-----------Welcome to the Bank of Aolia---------\n")
+        print("\n\t----------- Welcome to the Bank of Aolia ---------\n")
         print("Available Actions:")
         print("1: Deposit Money.")
         print("2: Withdraw Money.")
@@ -172,6 +178,7 @@ while True:
         print("5: Take loan.")
         print("6: Transfer money.")
         print("7: Log Out.")
+        print("8: Exit Bank.")
         op = int(input("Choose an Option: "))
         
         if op == 1:
@@ -191,9 +198,12 @@ while True:
             amount = int(input("Enter amount to transfer: "))
             name = input("Enter recipient name: ")
             user.transfer_money(amount, name)
-        else:
-            print("Log Out successful")
+        elif op ==7:
+            print("\nLog Out successful.")
             logged_in = None
+        else:
+            print("\n\tThanks for visiting the Bank of Aolia.")
+            break
 
     elif logged_in == admin:
         print("\n\t-----------Welcome to the Bank of Aolia---------\n")
@@ -204,7 +214,9 @@ while True:
         print("4: Check total balance of the Bank of Aolia.")
         print("5: Check total loan given from the Bank of Aolia.")
         print("6: Change Loan feature of the Bank of Aolia.")
-        print("7: Log Out.")
+        print("7: Announce Bankrupt!!!")
+        print("8: Log Out.")
+        print("9: Exit Bank.")
         op = int(input("Choose an Option: "))
 
         if op == 1:
@@ -233,7 +245,12 @@ while True:
                 admin.change_loan_availability(True)
             else: 
                 admin.change_loan_availability(False)
-        else:
-            print("Log Out successful")
+        elif op == 7:
+            admin.announce_bankrupt()
+        elif op == 8:
+            print("\nLog Out successful.")
             logged_in = None
+        else:
+            print("\n\tThanks for visiting the Bank of Aolia.")
+            break
      
